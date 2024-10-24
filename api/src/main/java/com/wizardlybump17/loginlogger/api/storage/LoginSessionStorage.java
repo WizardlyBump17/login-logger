@@ -1,7 +1,7 @@
 package com.wizardlybump17.loginlogger.api.storage;
 
-import com.wizardlybump17.loginlogger.api.LoginSession;
 import com.wizardlybump17.loginlogger.api.exception.LoginSessionStorageException;
+import com.wizardlybump17.loginlogger.api.session.LoginSession;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

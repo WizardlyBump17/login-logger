@@ -1,4 +1,4 @@
-package com.wizardlybump17.loginlogger.api;
+package com.wizardlybump17.loginlogger.api.session;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
