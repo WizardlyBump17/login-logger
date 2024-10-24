@@ -10,7 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implements Dao<LoginSession, Integer> {
 
@@ -84,6 +86,60 @@ public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implemen
                 return idExists(id);
             } catch (SQLException e) {
                 throw new LoginSessionStorageException("Error while checking if the login session by the id " + id + " exists", e);
+            }
+        }
+
+        @Override
+        public @NotNull List<LoginSession> getByPlayer(@NotNull UUID player) throws LoginSessionStorageException {
+            try {
+                return queryForEq("player", player);
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions from the player " + player, e);
+            }
+        }
+
+        @Override
+        public @NotNull List<LoginSession> getByIp(@NotNull String ip) throws LoginSessionStorageException {
+            try {
+                return queryForEq("ip", ip);
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions from the ip " + ip, e);
+            }
+        }
+
+        @Override
+        public @NotNull List<LoginSession> getByJoinedBefore(boolean joinedBefore) throws LoginSessionStorageException {
+            try {
+                return queryForEq("joined_before", joinedBefore);
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions by the joined before status equal " + joinedBefore, e);
+            }
+        }
+
+        @Override
+        public @NotNull List<LoginSession> getByLoginBetween(@NotNull Instant start, @NotNull Instant end) throws LoginSessionStorageException {
+            try {
+                return query(queryBuilder().where().ge("start", start).and().le("start", end).prepare());
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions between " + start + " and " + end, e);
+            }
+        }
+
+        @Override
+        public @NotNull List<LoginSession> getByLoginAfter(@NotNull Instant after) throws LoginSessionStorageException {
+            try {
+                return query(queryBuilder().where().ge("start", after).prepare());
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions after " + after, e);
+            }
+        }
+
+        @Override
+        public @NotNull List<LoginSession> getByLoginBefore(@NotNull Instant before) throws LoginSessionStorageException {
+            try {
+                return query(queryBuilder().where().le("start", before).prepare());
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions before " + before, e);
             }
         }
     }
