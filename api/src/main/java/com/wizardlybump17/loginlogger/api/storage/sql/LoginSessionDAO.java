@@ -142,5 +142,32 @@ public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implemen
                 throw new LoginSessionStorageException("Error while getting the login sessions before " + before, e);
             }
         }
+
+        @Override
+        public @NotNull List<LoginSession> getByLogoutBetween(@NotNull Instant start, @NotNull Instant end) throws LoginSessionStorageException {
+            try {
+                return query(queryBuilder().where().ge("end", start).and().le("end", end).prepare());
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions with logout between " + start + " and " + end, e);
+            }
+        }
+
+        @Override
+        public @NotNull List<LoginSession> getByLogoutAfter(@NotNull Instant after) throws LoginSessionStorageException {
+            try {
+                return query(queryBuilder().where().ge("end", after).prepare());
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions with logout after " + after, e);
+            }
+        }
+
+        @Override
+        public @NotNull List<LoginSession> getByLogoutBefore(@NotNull Instant before) throws LoginSessionStorageException {
+            try {
+                return query(queryBuilder().where().le("end", before).prepare());
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions with logout before " + before, e);
+            }
+        }
     }
 }

@@ -42,4 +42,10 @@ public interface LoginSessionStorage {
     @NotNull List<LoginSession> getByLoginAfter(@NotNull Instant after) throws LoginSessionStorageException;
 
     @NotNull List<LoginSession> getByLoginBefore(@NotNull Instant before) throws LoginSessionStorageException;
+
+    @NotNull List<LoginSession> getByLogoutBetween(@NotNull Instant start, @NotNull Instant end) throws LoginSessionStorageException;
+
+    @NotNull List<LoginSession> getByLogoutAfter(@NotNull Instant after) throws LoginSessionStorageException;
+
+    @NotNull List<LoginSession> getByLogoutBefore(@NotNull Instant before) throws LoginSessionStorageException;
 }
