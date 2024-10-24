@@ -23,6 +23,9 @@ public class LoginSession {
         this.joinedBefore = joinedBefore;
     }
 
+    public LoginSession() {
+    }
+
     public Integer getId() {
         return id;
     }
