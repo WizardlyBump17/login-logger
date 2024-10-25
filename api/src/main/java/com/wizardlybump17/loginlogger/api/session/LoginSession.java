@@ -2,6 +2,7 @@ package com.wizardlybump17.loginlogger.api.session;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.wizardlybump17.loginlogger.api.persister.InstantType;
 import com.wizardlybump17.loginlogger.api.storage.sql.LoginSessionDAO;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,9 +20,9 @@ public class LoginSession {
     private @NotNull UUID player;
     @DatabaseField(columnName = "ip", canBeNull = false)
     private @NotNull String ip;
-    @DatabaseField(columnName = "start", canBeNull = false)
+    @DatabaseField(columnName = "start", canBeNull = false, persisterClass = InstantType.class)
     private @NotNull Instant start;
-    @DatabaseField(columnName = "end")
+    @DatabaseField(columnName = "end", persisterClass = InstantType.class)
     private @Nullable Instant end;
     @DatabaseField(columnName = "joined_before", canBeNull = false)
     private boolean joinedBefore;
