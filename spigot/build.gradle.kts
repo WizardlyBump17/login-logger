@@ -10,6 +10,7 @@ repositories {
 
 val jetbrainsAnnotations = "25.0.0"
 val spigot = "1.17-R0.1-SNAPSHOT"
+val ormlite = "5.6"
 
 dependencies {
     implementation(project(":api")) {
@@ -18,6 +19,8 @@ dependencies {
     }
     compileOnly("org.jetbrains:annotations:${jetbrainsAnnotations}")
     compileOnly("org.spigotmc:spigot-api:${spigot}")
+    compileOnly("com.j256.ormlite:ormlite-core:${ormlite}")
+    compileOnly("com.j256.ormlite:ormlite-jdbc:${ormlite}")
 }
 
 tasks {
@@ -29,5 +32,9 @@ tasks {
 
     assemble {
         dependsOn(shadowJar)
+    }
+
+    shadowJar {
+        archiveBaseName = rootProject.name
     }
 }

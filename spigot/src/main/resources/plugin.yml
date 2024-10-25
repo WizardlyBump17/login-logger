@@ -1,4 +1,4 @@
-name: LoginLogger
+name: login-logger
 main: com.wizardlybump17.loginlogger.LoginLoggerPlugin
 version: "${project.version}"
 author: WizardlyBump17
