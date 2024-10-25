@@ -1,5 +1,8 @@
 package com.wizardlybump17.loginlogger.test;
 
+import com.wizardlybump17.loginlogger.api.LoginSessionAPI;
+import com.wizardlybump17.loginlogger.api.session.LoginSession;
+import com.wizardlybump17.loginlogger.api.storage.sql.LoginSessionDAO;
 import com.wizardlybump17.loginlogger.test.util.DatabaseConnection;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,8 +13,12 @@ import java.sql.SQLException;
 class LoginSessionDAOTest {
 
     @BeforeAll
-    static void setupConnectionSource() throws SQLException {
-        DatabaseConnection.getInstance().open();
+    static void setup() throws SQLException {
+        DatabaseConnection connection = DatabaseConnection.getInstance();
+        connection.open();
+
+        LoginSessionDAO sessionDAO = connection.getDao(LoginSession.class);
+        LoginSessionAPI.setLoginSessionStorage(sessionDAO.getStorage());
     }
 
     @AfterAll
