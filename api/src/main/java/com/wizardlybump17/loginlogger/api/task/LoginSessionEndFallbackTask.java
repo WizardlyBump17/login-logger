@@ -28,19 +28,19 @@ public abstract class LoginSessionEndFallbackTask implements Runnable {
     public void run() {
         Instant now = Instant.now();
         LoginSessionStorage storage = LoginSessionAPI.getLoginSessionStorage();
-        for (UUID player : getPlayers()) {
+        for (UUID player : getOnlinePlayers()) {
             try {
                 LoginSession session = storage.getLatestSession(player);
                 if (session == null || session.getEnd() != null)
                     continue;
 
                 session.setEndFallback(now);
-                 storage.update(session);
+                storage.update(session);
             } catch (LoginSessionStorageException e) {
                 logger.log(Level.SEVERE, "Error while updating the end fallback for the player " + player, e);
             }
         }
     }
 
-    public abstract @NotNull List<UUID> getPlayers();
+    public abstract @NotNull List<UUID> getOnlinePlayers();
 }

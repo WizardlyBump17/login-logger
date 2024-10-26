@@ -16,7 +16,7 @@ public class BukkitLoginSessionEndFallbackTask extends LoginSessionEndFallbackTa
     }
 
     @Override
-    public @NotNull List<UUID> getPlayers() {
+    public @NotNull List<UUID> getOnlinePlayers() {
         return Bukkit.getOnlinePlayers()
                 .stream()
                 .map(Player::getUniqueId)
