@@ -15,8 +15,8 @@ public record LoginListener(@NotNull LoginLoggerPlugin plugin) implements Listen
 
     public void register() {
         PluginManager manager = Bukkit.getPluginManager();
-        manager.registerEvent(PlayerJoinEvent.class, this, EventPriority.LOWEST, (listener, event) -> onJoin(((PlayerJoinEvent) event)), plugin);
-        manager.registerEvent(PlayerQuitEvent.class, this, EventPriority.LOWEST, (listener, event) -> onQuit(((PlayerQuitEvent) event)), plugin);
+        manager.registerEvent(PlayerJoinEvent.class, this, EventPriority.MONITOR, (listener, event) -> onJoin(((PlayerJoinEvent) event)), plugin);
+        manager.registerEvent(PlayerQuitEvent.class, this, EventPriority.MONITOR, (listener, event) -> onQuit(((PlayerQuitEvent) event)), plugin);
     }
 
     public void onJoin(@NotNull PlayerJoinEvent event) {
