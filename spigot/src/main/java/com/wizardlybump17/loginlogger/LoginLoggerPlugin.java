@@ -9,9 +9,11 @@ import com.wizardlybump17.loginlogger.api.LoginSessionAPI;
 import com.wizardlybump17.loginlogger.api.persister.InstantType;
 import com.wizardlybump17.loginlogger.api.session.LoginSession;
 import com.wizardlybump17.loginlogger.api.storage.sql.LoginSessionDAO;
+import com.wizardlybump17.loginlogger.listener.LoginListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,6 +35,8 @@ public final class LoginLoggerPlugin extends JavaPlugin {
             disable();
             return;
         }
+
+        registerListeners();
     }
 
     private void initDatabase() throws IOException, InvalidConfigurationException, SQLException {
@@ -52,6 +56,10 @@ public final class LoginLoggerPlugin extends JavaPlugin {
         LoginSessionAPI.setLoginSessionStorage(dao.getStorage());
     }
 
+    private void registerListeners() {
+        new LoginListener(this).register();
+    }
+
     private void disable() {
         Bukkit.getPluginManager().disablePlugin(this);
     }
@@ -65,6 +73,8 @@ public final class LoginLoggerPlugin extends JavaPlugin {
                 getLogger().log(Level.SEVERE, "Error while closing the connection.", e);
             }
         }
+
+        HandlerList.unregisterAll(this);
     }
 
     public static @NotNull LoginLoggerPlugin getInstance() {
