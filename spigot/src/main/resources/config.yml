@@ -1,0 +1,3 @@
+end-fallback:
+  initial: 60000 #ms
+  task-delay: 1200 #ticks

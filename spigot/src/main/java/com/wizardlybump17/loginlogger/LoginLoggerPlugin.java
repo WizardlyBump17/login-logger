@@ -9,6 +9,7 @@ import com.wizardlybump17.loginlogger.api.LoginSessionAPI;
 import com.wizardlybump17.loginlogger.api.persister.InstantType;
 import com.wizardlybump17.loginlogger.api.session.LoginSession;
 import com.wizardlybump17.loginlogger.api.storage.sql.LoginSessionDAO;
+import com.wizardlybump17.loginlogger.config.YamlLoginLoggerConfig;
 import com.wizardlybump17.loginlogger.listener.LoginListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -37,6 +38,13 @@ public final class LoginLoggerPlugin extends JavaPlugin {
         }
 
         registerListeners();
+
+        try {
+            initConfig();
+        } catch (IOException | InvalidConfigurationException e) {
+            getLogger().log(Level.SEVERE, "Error while loading the configuration.", e);
+            disable();
+        }
     }
 
     private void initDatabase() throws IOException, InvalidConfigurationException, SQLException {
@@ -58,6 +66,14 @@ public final class LoginLoggerPlugin extends JavaPlugin {
 
     private void registerListeners() {
         new LoginListener(this).register();
+    }
+
+    private void initConfig() throws IOException, InvalidConfigurationException {
+        YamlConfiguration configuration = new YamlConfiguration();
+        File file = new File(getDataFolder(), "config.yml");
+        saveResource("config.yml", false);
+        configuration.load(file);
+        LoginSessionAPI.setConfig(new YamlLoginLoggerConfig(configuration, file));
     }
 
     private void disable() {
