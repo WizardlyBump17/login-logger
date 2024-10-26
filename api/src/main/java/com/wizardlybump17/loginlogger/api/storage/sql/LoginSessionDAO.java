@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implements Dao<LoginSession, Integer> {
@@ -97,6 +98,18 @@ public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implemen
                 return queryForEq("player", player);
             } catch (SQLException e) {
                 throw new LoginSessionStorageException("Error while getting the login sessions from the player " + player, e);
+            }
+        }
+
+        @Override
+        public @NotNull List<LoginSession> getByPlayerAndGracefulEnd(@NotNull UUID player, boolean gracefulEnd) throws LoginSessionStorageException {
+            try {
+                return queryForFieldValuesArgs(Map.of(
+                        "player", player,
+                        "graceful_end", gracefulEnd
+                ));
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions from the player " + player + " and graceful end status " + gracefulEnd, e);
             }
         }
 

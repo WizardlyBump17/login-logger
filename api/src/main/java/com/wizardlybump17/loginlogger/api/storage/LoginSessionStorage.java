@@ -33,6 +33,8 @@ public interface LoginSessionStorage {
 
     @NotNull List<LoginSession> getByPlayer(@NotNull UUID player) throws LoginSessionStorageException;
 
+    @NotNull List<LoginSession> getByPlayerAndGracefulEnd(@NotNull UUID player, boolean gracefulEnd) throws LoginSessionStorageException;
+
     @NotNull List<LoginSession> getByIp(@NotNull String ip) throws LoginSessionStorageException;
 
     @NotNull List<LoginSession> getByLoginBetween(@NotNull Instant start, @NotNull Instant end) throws LoginSessionStorageException;
