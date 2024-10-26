@@ -32,11 +32,12 @@ public record LoginListener(@NotNull LoginLoggerPlugin plugin) implements Listen
         UUID id = player.getUniqueId();
 
         try {
+            Instant now = Instant.now();
             LoginSessionAPI.getLoginSessionStorage().store(new LoginSession(
                     id,
                     player.getAddress().getHostString(),
-                    Instant.now(),
-                    Instant.now().plus(1, ChronoUnit.MINUTES)
+                    now,
+                    now.plus(LoginSessionAPI.getConfig().getInitialEndFallback(), ChronoUnit.MILLIS)
             ));
         } catch (LoginSessionStorageException e) {
             plugin.getLogger().log(Level.SEVERE, "Error while creating a login session for " + id, e);
