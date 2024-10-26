@@ -2,6 +2,7 @@ package com.wizardlybump17.loginlogger.api.storage.sql;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.support.ConnectionSource;
 import com.wizardlybump17.loginlogger.api.exception.LoginSessionStorageException;
 import com.wizardlybump17.loginlogger.api.session.LoginSession;
@@ -9,6 +10,7 @@ import com.wizardlybump17.loginlogger.api.storage.LoginSessionStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
@@ -168,6 +170,16 @@ public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implemen
                 return result.isEmpty() ? null : result.get(0);
             } catch (SQLException e) {
                 throw new LoginSessionStorageException("Error while getting the latest login session of " + player, e);
+            }
+        }
+
+        @Override
+        public boolean hasJoinedBefore(@NotNull UUID player) throws LoginSessionStorageException {
+            try (GenericRawResults<String[]> results = queryRaw(queryBuilder().limit(1L).selectRaw("1").where().eq("player", player).prepare().getStatement())) {
+                String[] first = results.getFirstResult();
+                return first != null && first.length == 1 && "1".equals(first[0]);
+            } catch (SQLException | IOException e) {
+                throw new LoginSessionStorageException("Error while checking if " + player + " has joined before", e);
             }
         }
     }
