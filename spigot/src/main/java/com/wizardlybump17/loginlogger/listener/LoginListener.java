@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public record LoginListener(@NotNull LoginLoggerPlugin plugin) implements Listener {
 
@@ -28,19 +29,30 @@ public record LoginListener(@NotNull LoginLoggerPlugin plugin) implements Listen
     }
 
     public void onJoin(@NotNull PlayerJoinEvent event) {
+        LoginSessionStorage storage = LoginSessionAPI.getLoginSessionStorage();
         Player player = event.getPlayer();
         UUID id = player.getUniqueId();
+        Logger logger = plugin.getLogger();
+
+        try {
+            for (LoginSession session : storage.getByPlayerAndGracefulEnd(id, false)) {
+                session.setEnd(session.getEndFallback());
+                storage.update(session);
+            }
+        } catch (LoginSessionStorageException e) {
+            logger.log(Level.SEVERE, "Error while handling the end fallback for the player " + id);
+        }
 
         try {
             Instant now = Instant.now();
-            LoginSessionAPI.getLoginSessionStorage().store(new LoginSession(
+            storage.store(new LoginSession(
                     id,
                     player.getAddress().getHostString(),
                     now,
                     now.plus(LoginSessionAPI.getConfig().getInitialEndFallback(), ChronoUnit.MILLIS)
             ));
         } catch (LoginSessionStorageException e) {
-            plugin.getLogger().log(Level.SEVERE, "Error while creating a login session for " + id, e);
+            logger.log(Level.SEVERE, "Error while creating a login session for " + id, e);
         }
     }
 
