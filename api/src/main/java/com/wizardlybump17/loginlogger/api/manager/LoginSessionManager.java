@@ -24,6 +24,28 @@ public class LoginSessionManager {
         return logger;
     }
 
+    /**
+     * <p>
+     * Performs the "graceful end" and storing logics.
+     * </p>
+     * <p>
+     * First it tries to assign the {@link LoginSession#getEnd()} to the {@link LoginSession#getEndFallback()} to
+     * any {@link LoginSession}s that returns {@code false} for {@link LoginSession#isGracefulEnd()}.
+     * </p>
+     * <p>
+     * After that is done, this method creates a new {@link LoginSession} and stores it in the {@link LoginSessionStorage}
+     * provided by {@link LoginSessionAPI#getLoginSessionStorage()}.
+     * </p>
+     * <p>
+     * Any {@link LoginSessionStorageException} thrown is simply logged at {@link #getLogger()}
+     * </p>
+     *
+     * @param player the player who is joining
+     * @param ip     the ip of the player
+     * @return if the method successfully stored the {@link LoginSession}
+     * @see LoginSessionStorage#getByPlayerAndGracefulEnd(UUID, boolean)
+     * @see LoginSessionStorage#store(LoginSession)
+     */
     public boolean onJoin(@NotNull UUID player, @NotNull String ip) {
         LoginSessionStorage storage = LoginSessionAPI.getLoginSessionStorage();
 
@@ -51,6 +73,23 @@ public class LoginSessionManager {
         }
     }
 
+    /**
+     * <p>
+     * This method will attempt to end the latest {@link LoginSession} of the given player and mark it as "gracefully ended".
+     * </p>
+     * <p>
+     * If a {@link LoginSession} is not found or if it already has an end (i.e. {@link LoginSession#getEnd()} != {@code null}),
+     * it will be simply logged and this method will return {@code false}.
+     * </p>
+     * <p>
+     * Any {@link LoginSessionStorageException} thrown is simply logged at {@link #getLogger()}
+     * </p>
+     *
+     * @param player the player who is quitting
+     * @return if the {@link LoginSession} was successfully ended
+     * @see LoginSessionStorage#getLatestSession(UUID)
+     * @see LoginSession#getEnd()
+     */
     public boolean onQuit(@NotNull UUID player) {
         LoginSessionStorage storage = LoginSessionAPI.getLoginSessionStorage();
 

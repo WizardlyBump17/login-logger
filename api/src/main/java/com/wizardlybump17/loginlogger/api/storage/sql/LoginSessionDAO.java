@@ -34,7 +34,16 @@ public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implemen
         return new LoginSession();
     }
 
-    //This class exists because some methods cause conflicts with the Dao from ORMLite
+    /**
+     * <p>
+     * This class exists because some methods from the {@link LoginSessionStorage} interface conflicts with the {@link Dao} from ORMLite.
+     * </p>
+     * <p>
+     * This class uses the {@link LoginSessionDAO} class to perform SQL queries.
+     * </p>
+     *
+     * @see LoginSessionStorage
+     */
     public class Storage implements LoginSessionStorage {
 
         @Override

@@ -12,6 +12,13 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * <p>
+ * This class is responsible to keep updating the {@link LoginSession#getEndFallback()} to the current time ({@link Instant#now()})
+ * </p>
+ *
+ * @see LoginSession#getEndFallback()
+ */
 public abstract class LoginSessionEndFallbackTask implements Runnable {
 
     private final @NotNull Logger logger;
@@ -24,6 +31,13 @@ public abstract class LoginSessionEndFallbackTask implements Runnable {
         return logger;
     }
 
+    /**
+     * <p>
+     * Executes the update logic. If the {@link LoginSessionStorageException} is thrown, it will be simply logged in the {@link #getLogger()}.
+     * </p>
+     *
+     * @see LoginSession#getEndFallback()
+     */
     @Override
     public void run() {
         Instant now = Instant.now();

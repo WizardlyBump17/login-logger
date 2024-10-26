@@ -86,6 +86,11 @@ public final class LoginLoggerPlugin extends JavaPlugin {
     private void initTasks() {
         LoginSessionAPI.setEndFallbackTask(new BukkitLoginSessionEndFallbackTask(getLogger()));
         int delay = LoginSessionAPI.getConfig().getEndFallbackTaskDelay();
+        /*
+        This calls the `LoginSessionAPI.getEndFallbackTask().run()` method rather than passing
+        the `LoginSessionAPI.getEndFallbackTask()` as argument because it may be changed during
+        runtime by other plugins
+        */
         Bukkit.getScheduler().runTaskTimer(this, () -> LoginSessionAPI.getEndFallbackTask().run(), delay, delay);
     }
 

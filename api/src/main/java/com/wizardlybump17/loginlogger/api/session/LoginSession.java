@@ -2,8 +2,10 @@ package com.wizardlybump17.loginlogger.api.session;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.wizardlybump17.loginlogger.api.config.LoginLoggerConfig;
 import com.wizardlybump17.loginlogger.api.persister.InstantType;
 import com.wizardlybump17.loginlogger.api.storage.sql.LoginSessionDAO;
+import com.wizardlybump17.loginlogger.api.task.LoginSessionEndFallbackTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,18 +81,74 @@ public class LoginSession {
         this.end = end;
     }
 
+    /**
+     * <p>
+     * The "end fallback" system is for when the player unexpectedly gets disconnected without a chance for the logger system
+     * to take note. E.g. this can happen when the server is killed.
+     * </p>
+     * <p>
+     * This system holds the last time the player was seen online and in case the server is killed, when the player joins
+     * again, the {@link #getEnd()} will be set to the value returned by this method.
+     * </p>
+     * <p>
+     * When the player joins, this value is set to {@link Instant#now()} + {@link LoginLoggerConfig#getInitialEndFallback()},
+     * and it is updated to the current time in accord of {@link LoginLoggerConfig#getEndFallbackTaskDelay()}.
+     * </p>
+     *
+     * @return the last time the player was seen online
+     * @see LoginLoggerConfig#getInitialEndFallback()
+     * @see LoginLoggerConfig#getEndFallbackTaskDelay()
+     * @see LoginSessionEndFallbackTask
+     */
     public @NotNull Instant getEndFallback() {
         return endFallback;
     }
 
+    /**
+     * <p>
+     * The "end fallback" system is for when the player unexpectedly gets disconnected without a chance for the logger system
+     * to take note. E.g. this can happen when the server is killed.
+     * </p>
+     * <p>
+     * This system holds the last time the player was seen online and in case the server is killed, when the player joins
+     * again, the {@link #getEnd()} will be set to the value returned by this method.
+     * </p>
+     * <p>
+     * When the player joins, this value is set to {@link Instant#now()} + {@link LoginLoggerConfig#getInitialEndFallback()},
+     * and it is updated to the current time in accord of {@link LoginLoggerConfig#getEndFallbackTaskDelay()}.
+     * </p>
+     *
+     * @param endFallback the last time the player was seen online
+     * @see LoginLoggerConfig#getInitialEndFallback()
+     * @see LoginLoggerConfig#getEndFallbackTaskDelay()
+     * @see LoginSessionEndFallbackTask
+     */
     public void setEndFallback(@NotNull Instant endFallback) {
         this.endFallback = endFallback;
     }
 
+    /**
+     * <p>
+     * The "graceful end" system is for when the player unexpectedly gets disconnected without a chance for the logger system
+     * to take note. E.g. this can happen when the server is killed.
+     * </p>
+     *
+     * @return if the player disconnected from the server normally
+     * @see #getEndFallback()
+     */
     public boolean isGracefulEnd() {
         return gracefulEnd;
     }
 
+    /**
+     * <p>
+     * The "graceful end" system is for when the player unexpectedly gets disconnected without a chance for the logger system
+     * to take note. E.g. this can happen when the server is killed.
+     * </p>
+     *
+     * @param gracefulEnd if the player disconnected from the server normally
+     * @see #getEndFallback()
+     */
     public void setGracefulEnd(boolean gracefulEnd) {
         this.gracefulEnd = gracefulEnd;
     }
