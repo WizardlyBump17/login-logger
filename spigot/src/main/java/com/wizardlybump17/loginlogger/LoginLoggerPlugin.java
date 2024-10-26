@@ -11,6 +11,7 @@ import com.wizardlybump17.loginlogger.api.session.LoginSession;
 import com.wizardlybump17.loginlogger.api.storage.sql.LoginSessionDAO;
 import com.wizardlybump17.loginlogger.config.YamlLoginLoggerConfig;
 import com.wizardlybump17.loginlogger.listener.LoginListener;
+import com.wizardlybump17.loginlogger.task.BukkitLoginSessionEndFallbackTask;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -44,7 +45,10 @@ public final class LoginLoggerPlugin extends JavaPlugin {
         } catch (IOException | InvalidConfigurationException e) {
             getLogger().log(Level.SEVERE, "Error while loading the configuration.", e);
             disable();
+            return;
         }
+
+        initTasks();
     }
 
     private void initDatabase() throws IOException, InvalidConfigurationException, SQLException {
@@ -76,6 +80,12 @@ public final class LoginLoggerPlugin extends JavaPlugin {
         LoginSessionAPI.setConfig(new YamlLoginLoggerConfig(configuration, file));
     }
 
+    private void initTasks() {
+        LoginSessionAPI.setEndFallbackTask(new BukkitLoginSessionEndFallbackTask(getLogger()));
+        int delay = LoginSessionAPI.getConfig().getEndFallbackTaskDelay();
+        Bukkit.getScheduler().runTaskTimer(this, () -> LoginSessionAPI.getEndFallbackTask().run(), delay, delay);
+    }
+
     private void disable() {
         Bukkit.getPluginManager().disablePlugin(this);
     }
@@ -91,6 +101,7 @@ public final class LoginLoggerPlugin extends JavaPlugin {
         }
 
         HandlerList.unregisterAll(this);
+        Bukkit.getScheduler().cancelTasks(this);
     }
 
     public static @NotNull LoginLoggerPlugin getInstance() {

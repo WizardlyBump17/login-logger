@@ -2,12 +2,14 @@ package com.wizardlybump17.loginlogger.api;
 
 import com.wizardlybump17.loginlogger.api.config.LoginLoggerConfig;
 import com.wizardlybump17.loginlogger.api.storage.LoginSessionStorage;
+import com.wizardlybump17.loginlogger.api.task.LoginSessionEndFallbackTask;
 import org.jetbrains.annotations.NotNull;
 
 public final class LoginSessionAPI {
 
     private static LoginSessionStorage loginSessionStorage;
     private static LoginLoggerConfig config;
+    private static LoginSessionEndFallbackTask endFallbackTask;
 
     private LoginSessionAPI() {
     }
@@ -26,5 +28,13 @@ public final class LoginSessionAPI {
 
     public static void setConfig(@NotNull LoginLoggerConfig config) {
         LoginSessionAPI.config = config;
+    }
+
+    public static LoginSessionEndFallbackTask getEndFallbackTask() {
+        return endFallbackTask;
+    }
+
+    public static void setEndFallbackTask(@NotNull LoginSessionEndFallbackTask endFallbackTask) {
+        LoginSessionAPI.endFallbackTask = endFallbackTask;
     }
 }
