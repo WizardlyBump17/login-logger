@@ -25,12 +25,21 @@ public class InstantType extends BaseDataType {
 
     @Override
     public Object resultToSqlArg(FieldType fieldType, DatabaseResults results, int columnPos) throws SQLException {
-        return Timestamp.valueOf(results.getString(columnPos)).toInstant();
+        String string = results.getString(columnPos);
+        if (string == null)
+            return null;
+        return Timestamp.valueOf(string).toInstant();
     }
 
     @Override
     public Object sqlArgToJava(FieldType fieldType, Object sqlArg, int columnPos) {
-        return Timestamp.from((Instant) sqlArg).toString();
+        if (sqlArg == null)
+            return null;
+        if (sqlArg instanceof String string)
+            return Instant.parse(string);
+        if (sqlArg instanceof Instant instant)
+            return instant;
+        throw new IllegalArgumentException("Could not parse '" + sqlArg + "' to Instant");
     }
 
     public static @NotNull InstantType getSingleton() {
