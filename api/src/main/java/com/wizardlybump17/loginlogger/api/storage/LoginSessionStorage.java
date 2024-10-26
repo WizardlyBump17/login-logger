@@ -48,4 +48,6 @@ public interface LoginSessionStorage {
     @NotNull List<LoginSession> getByLogoutAfter(@NotNull Instant after) throws LoginSessionStorageException;
 
     @NotNull List<LoginSession> getByLogoutBefore(@NotNull Instant before) throws LoginSessionStorageException;
+
+    @Nullable LoginSession getLatestSession(@NotNull UUID player) throws LoginSessionStorageException;
 }

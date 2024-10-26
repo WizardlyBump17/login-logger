@@ -169,5 +169,15 @@ public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implemen
                 throw new LoginSessionStorageException("Error while getting the login sessions with logout before " + before, e);
             }
         }
+
+        @Override
+        public @Nullable LoginSession getLatestSession(@NotNull UUID player) throws LoginSessionStorageException {
+            try {
+                List<LoginSession> result = query(queryBuilder().limit(1L).orderBy("start", false).where().eq("player", player).prepare());
+                return result.isEmpty() ? null : result.get(0);
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the latest login session of " + player, e);
+            }
+        }
     }
 }
