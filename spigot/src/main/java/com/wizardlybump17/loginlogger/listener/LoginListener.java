@@ -62,6 +62,7 @@ public record LoginListener(@NotNull LoginLoggerPlugin plugin) implements Listen
             }
 
             session.setEnd(Instant.now());
+            session.setGracefulEnd(true);
             storage.update(session);
         } catch (LoginSessionStorageException e) {
             plugin.getLogger().log(Level.SEVERE, "Error while handling the logout of " + id, e);
