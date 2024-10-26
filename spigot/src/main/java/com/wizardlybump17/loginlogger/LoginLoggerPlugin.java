@@ -6,6 +6,7 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.wizardlybump17.loginlogger.api.LoginSessionAPI;
+import com.wizardlybump17.loginlogger.api.manager.LoginSessionManager;
 import com.wizardlybump17.loginlogger.api.persister.InstantType;
 import com.wizardlybump17.loginlogger.api.session.LoginSession;
 import com.wizardlybump17.loginlogger.api.storage.sql.LoginSessionDAO;
@@ -30,6 +31,8 @@ public final class LoginLoggerPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        LoginSessionAPI.setLoginSessionManager(new LoginSessionManager(getLogger()));
+
         try {
             initDatabase();
         } catch (IOException | InvalidConfigurationException | SQLException e) {
