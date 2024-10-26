@@ -15,6 +15,7 @@ import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -31,7 +32,12 @@ public record LoginListener(@NotNull LoginLoggerPlugin plugin) implements Listen
         UUID id = player.getUniqueId();
 
         try {
-            LoginSessionAPI.getLoginSessionStorage().store(new LoginSession(id, player.getAddress().getHostString(), Instant.now(), player.hasPlayedBefore()));
+            LoginSessionAPI.getLoginSessionStorage().store(new LoginSession(
+                    id,
+                    player.getAddress().getHostString(),
+                    Instant.now(),
+                    Instant.now().plus(1, ChronoUnit.MINUTES)
+            ));
         } catch (LoginSessionStorageException e) {
             plugin.getLogger().log(Level.SEVERE, "Error while creating a login session for " + id, e);
         }

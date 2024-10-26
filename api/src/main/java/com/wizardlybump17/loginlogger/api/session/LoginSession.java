@@ -24,14 +24,14 @@ public class LoginSession {
     private @NotNull Instant start;
     @DatabaseField(columnName = "end", persisterClass = InstantType.class)
     private @Nullable Instant end;
-    @DatabaseField(columnName = "joined_before", canBeNull = false)
-    private boolean joinedBefore;
+    @DatabaseField(columnName = "end_fallback", canBeNull = false, persisterClass = InstantType.class)
+    private @NotNull Instant endFallback;
 
-    public LoginSession(@NotNull UUID player, @NotNull String ip, @NotNull Instant start, boolean joinedBefore) {
+    public LoginSession(@NotNull UUID player, @NotNull String ip, @NotNull Instant start, @NotNull Instant endFallback) {
         this.player = player;
         this.ip = ip;
         this.start = start;
-        this.joinedBefore = joinedBefore;
+        this.endFallback = endFallback;
     }
 
     public LoginSession() {
@@ -77,12 +77,12 @@ public class LoginSession {
         this.end = end;
     }
 
-    public boolean hasJoinedBefore() {
-        return joinedBefore;
+    public @NotNull Instant getEndFallback() {
+        return endFallback;
     }
 
-    public void setJoinedBefore(boolean joinedBefore) {
-        this.joinedBefore = joinedBefore;
+    public void setEndFallback(@NotNull Instant endFallback) {
+        this.endFallback = endFallback;
     }
 
     @Override
@@ -92,17 +92,17 @@ public class LoginSession {
         if (o == null || getClass() != o.getClass())
             return false;
         LoginSession that = (LoginSession) o;
-        return joinedBefore == that.joinedBefore
-                && Objects.equals(id, that.id)
+        return Objects.equals(id, that.id)
                 && Objects.equals(player, that.player)
                 && Objects.equals(ip, that.ip)
                 && Objects.equals(start, that.start)
-                && Objects.equals(end, that.end);
+                && Objects.equals(end, that.end)
+                && Objects.equals(endFallback, that.endFallback);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, player, ip, start, end, joinedBefore);
+        return Objects.hash(id, player, ip, start, end, endFallback);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class LoginSession {
                 ", ip='" + ip + '\'' +
                 ", start=" + start +
                 ", end=" + end +
-                ", joinedBefore=" + joinedBefore +
+                ", endFallback=" + endFallback +
                 '}';
     }
 }

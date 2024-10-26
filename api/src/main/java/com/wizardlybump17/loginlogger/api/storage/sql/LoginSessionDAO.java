@@ -108,15 +108,6 @@ public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implemen
         }
 
         @Override
-        public @NotNull List<LoginSession> getByJoinedBefore(boolean joinedBefore) throws LoginSessionStorageException {
-            try {
-                return queryForEq("joined_before", joinedBefore);
-            } catch (SQLException e) {
-                throw new LoginSessionStorageException("Error while getting the login sessions by the joined before status equal " + joinedBefore, e);
-            }
-        }
-
-        @Override
         public @NotNull List<LoginSession> getByLoginBetween(@NotNull Instant start, @NotNull Instant end) throws LoginSessionStorageException {
             try {
                 return query(queryBuilder().where().ge("start", start).and().le("start", end).prepare());
