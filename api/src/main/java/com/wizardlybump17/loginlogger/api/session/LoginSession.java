@@ -26,6 +26,8 @@ public class LoginSession {
     private @Nullable Instant end;
     @DatabaseField(columnName = "end_fallback", canBeNull = false, persisterClass = InstantType.class)
     private @NotNull Instant endFallback;
+    @DatabaseField(columnName = "graceful_end", canBeNull = false)
+    private boolean gracefulEnd;
 
     public LoginSession(@NotNull UUID player, @NotNull String ip, @NotNull Instant start, @NotNull Instant endFallback) {
         this.player = player;
@@ -85,6 +87,14 @@ public class LoginSession {
         this.endFallback = endFallback;
     }
 
+    public boolean isGracefulEnd() {
+        return gracefulEnd;
+    }
+
+    public void setGracefulEnd(boolean gracefulEnd) {
+        this.gracefulEnd = gracefulEnd;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -92,7 +102,8 @@ public class LoginSession {
         if (o == null || getClass() != o.getClass())
             return false;
         LoginSession that = (LoginSession) o;
-        return Objects.equals(id, that.id)
+        return gracefulEnd == that.gracefulEnd
+                && Objects.equals(id, that.id)
                 && Objects.equals(player, that.player)
                 && Objects.equals(ip, that.ip)
                 && Objects.equals(start, that.start)
@@ -102,7 +113,7 @@ public class LoginSession {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, player, ip, start, end, endFallback);
+        return Objects.hash(id, player, ip, start, end, endFallback, gracefulEnd);
     }
 
     @Override
@@ -114,6 +125,7 @@ public class LoginSession {
                 ", start=" + start +
                 ", end=" + end +
                 ", endFallback=" + endFallback +
+                ", gracefulEnd=" + gracefulEnd +
                 '}';
     }
 }

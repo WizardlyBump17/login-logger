@@ -50,4 +50,6 @@ public interface LoginSessionStorage {
     @Nullable LoginSession getLatestSession(@NotNull UUID player) throws LoginSessionStorageException;
 
     boolean hasJoinedBefore(@NotNull UUID player) throws LoginSessionStorageException;
+
+    @NotNull List<LoginSession> getByGracefulEnd(boolean graceful) throws LoginSessionStorageException;
 }

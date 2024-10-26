@@ -182,5 +182,14 @@ public class LoginSessionDAO extends BaseDaoImpl<LoginSession, Integer> implemen
                 throw new LoginSessionStorageException("Error while checking if " + player + " has joined before", e);
             }
         }
+
+        @Override
+        public @NotNull List<LoginSession> getByGracefulEnd(boolean graceful) throws LoginSessionStorageException {
+            try {
+                return queryForEq("graceful_end", graceful);
+            } catch (SQLException e) {
+                throw new LoginSessionStorageException("Error while getting the login sessions with the graceful end status " + graceful, e);
+            }
+        }
     }
 }
